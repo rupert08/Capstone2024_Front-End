@@ -19,12 +19,12 @@
 
         <div>
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="updatedCustomer.contact.email" />
+          <input type="email" id="email" v-model="updatedCustomerContact.email" />
         </div>
 
         <div>
           <label for="phone">Phone</label>
-          <input type="tel" id="phone" v-model="updatedCustomer.contact.phoneNumber" />
+          <input type="tel" id="phone" v-model="updatedCustomerContact.phoneNumber" />
         </div>
 
         <button type="button" @click="submitUpdate">Update Customer</button>
@@ -42,17 +42,19 @@ export default {
   props: {
     isVisible: {
       type: Boolean,
-      required: true
+      required: true,
     },
     customer: {
       type: Object,
       default: () => null, // Default to null to avoid type errors
-    }
+    },
   },
   data() {
     return {
-      // Create a copy of the customer data to modify without affecting the original object
-      updatedCustomer: this.customer ? { ...this.customer } : {}
+      updatedCustomer: this.customer ? { ...this.customer } : {},
+      updatedCustomerContact: this.customer?.contact
+        ? { ...this.customer.contact }
+        : {}, // Separate reactive handling for contact object
     };
   },
   watch: {
@@ -60,20 +62,24 @@ export default {
     customer(newCustomer) {
       if (newCustomer) {
         this.updatedCustomer = { ...newCustomer };
+        this.updatedCustomerContact = { ...newCustomer.contact };
       }
-    }
+    },
   },
   methods: {
     submitUpdate() {
+      // Ensure that updated contact information is correctly merged back into the customer object
+      this.updatedCustomer.contact = this.updatedCustomerContact;
+
       // Emit the updated customer data back to the parent component
-      this.$emit('update-customer', this.customer.userId, this.updatedCustomer);
-      this.$emit('close'); // Close the modal after submission
+      this.$emit("update-customer", this.customer.userId, this.updatedCustomer);
+      this.$emit("close"); // Close the modal after submission
     },
     closeModal() {
       // Emit the close event to close the modal
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 };
 </script>
 

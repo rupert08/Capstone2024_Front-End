@@ -10,14 +10,12 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
           <th>Name</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="category in recentCategories" :key="category.id">
-          <td>{{ category.categoryId }}</td>
           <td>{{ category.name }}</td>
           <td>{{ category.description }}</td>
         </tr>

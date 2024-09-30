@@ -1,7 +1,7 @@
 <template>
   <div class="management-section">
     <h3>Manage Customers</h3>
-    <button @click="openAddModal">Add Customer</button>
+    <!-- <button @click="openAddModal">Add Customer</button>  -->
     <input type="text" v-model="searchQuery" placeholder="Search customers..." />
     <table>
       <thead>
@@ -9,7 +9,7 @@
           <th @click="sortBy('id')">ID</th>
           <th @click="sortBy('firstName')">First Name</th>
           <th @click="sortBy('lastName')">Last Name</th>
-          <th @click="sortBy('email')">Email</th>
+          <th @click="sortBy('email')">Email</th> 
           <th @click="sortBy('phone')">Phone</th>
           <th>Actions</th>
         </tr>
