@@ -20,31 +20,28 @@ export function deleteProduct(productId) {
     });
 }
 
-export function createProduct(product, image) {
-  const formData = new FormData();
-  
-  // Append the product details to the form data
-  formData.append('name', product.name);
-  formData.append('description', product.description);
-  formData.append('price', product.price);
-  formData.append('category', product.categoryId);
-
-  
-  // Append the image file if it exists
-  if (image) {
-    formData.append('image', image);
-  }
-
-  formData.append("product", new Blob([JSON.stringify(product)], { type: "application/json" }));
-  
+export function createProduct(formData) {
   return axios.post(`${API_URL}addProduct`, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+      'Content-Type': 'multipart/form-data',
     },
   })
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Error creating product:', error);
-      throw error;
-    });
+  .then(response => response.data)
+  .catch(error => {
+    console.error('Error creating product:', error);
+    throw error;
+  });
+}
+
+export function updateProduct(productId, formData) {
+  return axios.put(`${API_URL}update/${productId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  .then(response => response.data)
+  .catch(error => {
+    console.error('Error updating product:', error);
+    throw error;
+  });
 }

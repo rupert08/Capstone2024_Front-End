@@ -18,20 +18,20 @@
 
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" id="price" v-model="newProduct.price" step="0.01" required />
+                    <input type="number" id="price" v-model="newProduct.price" step="0.01" min="0" required />
                 </div>
 
-                <label>Select a category:</label>
-  <div v-for="category in categories" :key="category.categoryId">
-    <input 
-      type="radio" 
-      :id="'category-' + category.categoryId"
-      :value="category.categoryId" 
-      v-model="newProduct.categoryId" 
-      required
-    />
-    <label :for="'category-' + category.categoryId">{{ category.name }}</label>
-
+                <div class="control_wrapper">
+                    <label for="category">Category</label>
+                    <div class="control_wrapper">
+                        <ejs-combobox
+    id="combobox"
+    :dataSource="categories ? categories : []"
+    placeholder="Select a category"
+    v-model="newProduct.categoryId"
+    :fields="{ text: 'name', value: 'categoryId' }"
+></ejs-combobox>
+        </div>
                 </div>
 
                 <div class="form-group">
@@ -47,7 +47,12 @@
 </template>
 
 <script>
+import { ComboBoxComponent as EjsCombobox } from "@syncfusion/ej2-vue-dropdowns";
+
 export default {
+    components: {
+        EjsCombobox 
+    },
     props: {
         isVisible: {
             type: Boolean,
@@ -64,7 +69,7 @@ export default {
                 name: '',
                 description: '',
                 price: null,
-                categoryId: '', // Ensure this is initialized to an empty string
+                categoryId: '', 
                 image: null,
             },
         };
@@ -72,20 +77,31 @@ export default {
     methods: {
         handleImageUpload(event) {
             const file = event.target.files[0];
+            console.log(file); // Log to check if the image is selected
             this.newProduct.image = file;
         },
         submitProduct() {
-            const formData = new FormData();
-            formData.append('name', this.newProduct.name);
-            formData.append('description', this.newProduct.description);
-            formData.append('price', this.newProduct.price);
-            formData.append('categoryId', this.newProduct.categoryId); // Submit the selected category's ID
+        const formData = new FormData();
+        
+        // Create a product object
+        const product = {
+            name: this.newProduct.name,
+            description: this.newProduct.description,
+            price: this.newProduct.price.toFixed(2),
+            category: { categoryId: this.newProduct.categoryId }
+        };
+
+        // Append the product object as a JSON blob
+        formData.append('product', new Blob([JSON.stringify(product)], { type: "application/json" }));
+
+        if (this.newProduct.image) {
             formData.append('image', this.newProduct.image);
+        }
 
-            this.$emit('add-product', formData); // Emit formData
-            this.closeModal(); // Close the modal after emitting
-        },
-
+        console.log('Form Data:', formData); // Log form data
+        this.$emit('add-product', formData);
+        this.closeModal();
+    },
         closeModal() {
             this.$emit('close');
         },
@@ -177,11 +193,7 @@ textarea {
     background-color: #c0392b;
 }
 
-input[type="radio"] {
-  margin-right: 10px;
-}
-
-div {
-  margin-bottom: 10px;
-}
+@import '~@syncfusion/ej2-base/styles/material.css';
+@import '~@syncfusion/ej2-inputs/styles/material.css';
+@import '~@syncfusion/ej2-vue-dropdowns/styles/material.css';
 </style>
