@@ -63,7 +63,7 @@ export default {
     };
   },
   async created() {
-    await this.fetchCustomers(); // Fetch the customers when the component is created
+    await this.fetchCustomers(); 
   },
   computed: {
     filteredCustomers() {
@@ -115,7 +115,7 @@ export default {
       }
       try {
         await updateCustomer(customerId, updatedCustomer);
-        this.fetchCustomers(); // Refresh the customer list after update
+        this.fetchCustomers(); 
       } catch (error) {
         console.error('Error updating customer:', error);
       }
@@ -124,7 +124,7 @@ export default {
       if (confirm('Are you sure you want to delete this customer?')) {
         try {
           await deleteCustomer(customerId);
-          this.fetchCustomers(); // Refresh the customer list after deletion
+          this.fetchCustomers(); 
         } catch (error) {
           console.error('Error deleting customer:', error);
         }

@@ -5,7 +5,6 @@
 
       <h3>Update Product</h3>
 
-      <!-- Only show the form if product data is available -->
       <form v-if="updatedProduct">
         <div>
           <label for="name">Product Name</label>
@@ -23,87 +22,36 @@
         </div>
 
         <div class="control_wrapper">
-                    <label for="category">Category</label>
-                    <div class="control_wrapper">
-                        <ejs-combobox
-    id="combobox"
-    :dataSource="categories ? categories : []"
-    placeholder="Select a category"
-    v-model="newProduct.categoryId"
-    :fields="{ text: 'name', value: 'categoryId' }"
-></ejs-combobox>
-        </div>
-                </div>
-
-        <div>
-          <label for="image">Image</label>
-          <input type="file" id="image" @change="handleImageUpload" />
+          <label for="category">Category</label>
+          <div class="control_wrapper">
+            <ejs-combobox
+              id="combobox"
+              :dataSource="categories ? categories : []"
+              placeholder="Select a category"
+              v-model="updatedProduct.categoryId"
+              :fields="{ text: 'name', value: 'categoryId' }"
+            ></ejs-combobox>
+          </div>
         </div>
 
-        <button type="button" @click="submitUpdate">Update Product</button>
+        <button type="button" @click="submitUpdate">Update</button>
         <button type="button" @click="closeModal">Cancel</button>
       </form>
 
-      <!-- Display a message if updatedProduct is null -->
+      <!-- Debugging purposes, display message if product is null -->
       <p v-else>No product selected for update</p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { updateProduct } from '@/services/productService';
 import { ComboBoxComponent as EjsCombobox } from "@syncfusion/ej2-vue-dropdowns";
 
-const API_URL = '/ecommerce/products/';
-
-export function getProducts() {
-  return axios.get(`${API_URL}getAll`)
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Error fetching products:', error);
-      throw error;
-    });
-}
-
-export function deleteProduct(productId) {
-  return axios.delete(`${API_URL}delete/${productId}`)
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Error deleting product:', error);
-      throw error;
-    });
-}
-
-export function createProduct(formData) {
-  return axios.post(`${API_URL}addProduct`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-  .then(response => response.data)
-  .catch(error => {
-    console.error('Error creating product:', error);
-    throw error;
-  });
-}
-
-export function updateProduct(productId, formData) {
-  return axios.put(`${API_URL}update/${productId}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-  .then(response => response.data)
-  .catch(error => {
-    console.error('Error updating product:', error);
-    throw error;
-  });
-}
-
 export default {
-    components: {
-        EjsCombobox 
-    },
+  components: {
+    EjsCombobox 
+  },
   props: {
     isVisible: {
       type: Boolean,
@@ -111,7 +59,7 @@ export default {
     },
     productData: {
       type: Object,
-      default: () => null, // Default to null to avoid type errors
+      default: () => null, 
     },
     categories: {
       type: Array,
@@ -121,11 +69,9 @@ export default {
   data() {
     return {
       updatedProduct: this.productData ? { ...this.productData } : {},
-      newImage: null,
     };
   },
   watch: {
-    // Update the form data when the productData prop changes
     productData(newProduct) {
       if (newProduct) {
         this.updatedProduct = { ...newProduct };
@@ -133,14 +79,9 @@ export default {
     },
   },
   methods: {
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      this.newImage = file;
-    },
     async submitUpdate() {
       const formData = new FormData();
 
-      // Create a product object
       const updatedProduct = {
         name: this.updatedProduct.name,
         description: this.updatedProduct.description,
@@ -148,24 +89,18 @@ export default {
         category: { categoryId: this.updatedProduct.categoryId },
       };
 
-      // Append the product object as a JSON blob
       formData.append('product', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
 
-      if (this.newImage) {
-        formData.append('image', this.newImage);
-      }
-
-      console.log('Form Data:', formData); // Log form data
+      console.log('Form Data:', formData); 
       try {
         await updateProduct(this.updatedProduct.productId, formData);
         this.$emit('update-product', formData);
-        this.$emit('close'); // Close the modal after submission
+        this.$emit('close'); 
       } catch (error) {
         console.error('Error updating product:', error);
       }
     },
     closeModal() {
-      // Emit the close event to close the modal
       this.$emit('close');
     },
   },

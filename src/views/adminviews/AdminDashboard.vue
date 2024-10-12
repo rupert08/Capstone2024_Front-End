@@ -5,7 +5,6 @@
     <div class="content">
       <div class="header">
         <h1>Admin Dashboard</h1>
-        <input type="text" placeholder="Search..." class="search-bar" />
       </div>
       <RecentCustomer />
       <RecentProducts />

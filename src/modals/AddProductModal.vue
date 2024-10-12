@@ -77,13 +77,13 @@ export default {
     methods: {
         handleImageUpload(event) {
             const file = event.target.files[0];
-            console.log(file); // Log to check if the image is selected
+            console.log(file); 
             this.newProduct.image = file;
         },
         submitProduct() {
         const formData = new FormData();
         
-        // Create a product object
+        // Product object
         const product = {
             name: this.newProduct.name,
             description: this.newProduct.description,
@@ -91,14 +91,14 @@ export default {
             category: { categoryId: this.newProduct.categoryId }
         };
 
-        // Append the product object as a JSON blob
+        // Convert object as JSON blob
         formData.append('product', new Blob([JSON.stringify(product)], { type: "application/json" }));
 
         if (this.newProduct.image) {
             formData.append('image', this.newProduct.image);
         }
 
-        console.log('Form Data:', formData); // Log form data
+        console.log('Form Data:', formData);
         this.$emit('add-product', formData);
         this.closeModal();
     },
@@ -110,7 +110,7 @@ export default {
 </script>
 
 <style scoped>
-/* Modal background */
+
 .modal {
     display: block;
     position: fixed;
@@ -122,7 +122,7 @@ export default {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Modal content */
+
 .modal-content {
     position: relative;
     margin: 10% auto;
@@ -133,7 +133,6 @@ export default {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Close button */
 .close {
     position: absolute;
     top: 10px;
@@ -142,7 +141,6 @@ export default {
     cursor: pointer;
 }
 
-/* Form styling */
 .form-group {
     margin-bottom: 15px;
 }
@@ -165,7 +163,6 @@ textarea {
     font-size: 16px;
 }
 
-/* Buttons styling */
 .add-button {
     background-color: #3498db;
     color: white;

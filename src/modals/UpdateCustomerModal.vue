@@ -5,7 +5,6 @@
 
       <h3>Update Customer</h3>
 
-      <!-- Only show the form if customer data is available -->
       <form v-if="customer">
         <div>
           <label for="firstName">First Name</label>
@@ -46,7 +45,7 @@ export default {
     },
     customer: {
       type: Object,
-      default: () => null, // Default to null to avoid type errors
+      default: () => null, 
     },
   },
   data() {
@@ -54,11 +53,11 @@ export default {
       updatedCustomer: this.customer ? { ...this.customer } : {},
       updatedCustomerContact: this.customer?.contact
         ? { ...this.customer.contact }
-        : {}, // Separate reactive handling for contact object
+        : {},
     };
   },
   watch: {
-    // Update the form data when the customer prop changes
+    
     customer(newCustomer) {
       if (newCustomer) {
         this.updatedCustomer = { ...newCustomer };
@@ -68,15 +67,12 @@ export default {
   },
   methods: {
     submitUpdate() {
-      // Ensure that updated contact information is correctly merged back into the customer object
       this.updatedCustomer.contact = this.updatedCustomerContact;
 
-      // Emit the updated customer data back to the parent component
       this.$emit("update-customer", this.customer.userId, this.updatedCustomer);
-      this.$emit("close"); // Close the modal after submission
+      this.$emit("close"); 
     },
     closeModal() {
-      // Emit the close event to close the modal
       this.$emit("close");
     },
   },
@@ -84,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add some basic styles for the modal */
 .modal {
   display: block;
   position: fixed;
