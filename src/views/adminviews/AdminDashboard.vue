@@ -5,10 +5,9 @@
     <div class="content">
       <div class="header">
         <h1>Admin Dashboard</h1>
-        <input type="text" placeholder="Search..." class="search-bar" />
       </div>
       <RecentCustomer />
-      <ProductManagement />
+      <RecentProducts />
       <RecentCategories />
       <OrderManagement />
 
@@ -19,15 +18,15 @@
 
 <script>
 import AdminSidebar from './AdminSidebar.vue';
-import ProductManagement from './ProductManagement.vue';
 import OrderManagement from './OrderManagement.vue';
 import RecentCustomer from '@/components/RecentCustomer.vue';
 import RecentCategories from '@/components/RecentCategories.vue';
+import RecentProducts from '@/components/RecentProducts.vue';
 
 export default {
   components: {
     AdminSidebar,
-    ProductManagement,
+    RecentProducts,
     OrderManagement,
     RecentCategories,
     RecentCustomer

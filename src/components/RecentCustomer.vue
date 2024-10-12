@@ -2,7 +2,12 @@
 <template>
   <div class="recent-customers">
     <h3>Recent Customers</h3>
-    <p>Total Customers: {{ totalCustomers }}</p>
+    
+    <!-- Amount of Customers -->
+    <div class="customer-count">
+      Amount of Customers: {{ totalCustomers }}
+    </div>
+    
     <table>
       <thead>
         <tr>
@@ -55,6 +60,11 @@ export default {
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 8px;
+}
+
+.customer-count {
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 table {

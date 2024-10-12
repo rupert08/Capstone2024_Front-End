@@ -1,7 +1,7 @@
 <template>
   <div class="management-section">
     <h3>Manage Customers</h3>
-    <button @click="openAddModal">Add Customer</button>
+    <!-- <button @click="openAddModal">Add Customer</button>  -->
     <input type="text" v-model="searchQuery" placeholder="Search customers..." />
     <table>
       <thead>
@@ -9,7 +9,7 @@
           <th @click="sortBy('id')">ID</th>
           <th @click="sortBy('firstName')">First Name</th>
           <th @click="sortBy('lastName')">Last Name</th>
-          <th @click="sortBy('email')">Email</th>
+          <th @click="sortBy('email')">Email</th> 
           <th @click="sortBy('phone')">Phone</th>
           <th>Actions</th>
         </tr>
@@ -63,7 +63,7 @@ export default {
     };
   },
   async created() {
-    await this.fetchCustomers(); // Fetch the customers when the component is created
+    await this.fetchCustomers(); 
   },
   computed: {
     filteredCustomers() {
@@ -115,7 +115,7 @@ export default {
       }
       try {
         await updateCustomer(customerId, updatedCustomer);
-        this.fetchCustomers(); // Refresh the customer list after update
+        this.fetchCustomers(); 
       } catch (error) {
         console.error('Error updating customer:', error);
       }
@@ -124,7 +124,7 @@ export default {
       if (confirm('Are you sure you want to delete this customer?')) {
         try {
           await deleteCustomer(customerId);
-          this.fetchCustomers(); // Refresh the customer list after deletion
+          this.fetchCustomers(); 
         } catch (error) {
           console.error('Error deleting customer:', error);
         }

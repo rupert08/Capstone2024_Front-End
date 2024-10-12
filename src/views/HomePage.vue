@@ -26,7 +26,8 @@
           <div class="col s12 m6 l4" v-for="product in products" :key="product.id">
             <div class="card">
               <div class="card-image">
-                <img :src="product.image" alt="Product Image">
+                <!-- Display product image if available, otherwise show a default image -->
+                <img :src="product.image ? getProductImage(product.productId) : '/assets/'" alt="Product Image">
                 <span class="card-title">{{ product.name }}</span>
               </div>
               <div class="card-content">
@@ -45,33 +46,58 @@
   </div>
 </template>
 
-
 <script>
-import { ref, onMounted } from 'vue';
 import { getProducts } from '@/services/productService.js';
 import { getCategories } from '@/services/categoryService';
 
 export default {
   name: 'HomePage',
-  setup() {
-    const products = ref([]);
-    const categories = ref([]);
-
-    onMounted(async () => {
-  try {
-    products.value = await getProducts();
-    categories.value = await getCategories();
-    console.log(categories.value); // Check if images are correctly loaded
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-});
-
+  data() {
     return {
-      products,
-      categories,
+      products: [],
+      categories: [],
+      isAddModalVisible: false,
+      sortKey: '',
+      sortAsc: true
     };
   },
+  async created() {
+    await this.fetchProducts();
+    await this.fetchCategories();  // Fetch categories on component load
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        this.products = await getProducts();
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    },
+    async fetchCategories() {
+      try {
+        this.categories = await getCategories();
+        console.log(this.categories); // Log to verify that categories are fetched
+        this.filteredCategories = this.categories;
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    },
+    // Construct the image URL for the product
+    getProductImage(productId) {
+      return `http://localhost:5119/products/${productId}/image`;
+    },
+    sortBy(key) {
+      this.sortKey = key;
+      this.sortAsc = !this.sortAsc;
+      this.products.sort((a, b) => {
+        let modifier = 1;
+        if (!this.sortAsc) modifier = -1;
+        if (a[key] < b[key]) return -1 * modifier;
+        if (a[key] > b[key]) return 1 * modifier;
+        return 0;
+      });
+    }
+  }
 };
 </script>
 
