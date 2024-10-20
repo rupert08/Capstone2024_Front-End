@@ -22,7 +22,7 @@
 
 <script>
 import PageFooter from './components/Footer.vue';
-import { getUserDetails, logoutUser } from '@/services/userService';
+import { getUserDetails } from '@/services/userService';
 
 export default {
   name: 'App',
@@ -53,21 +53,26 @@ export default {
       }, 1000);
     },
     async checkUserStatus() {
-      try {
-        const userDetails = await getUserDetails();
-        this.user = userDetails;
-        this.isLoggedIn = true;
-      } catch (error) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const userDetails = await getUserDetails(token);
+          this.user = userDetails;
+          this.isLoggedIn = true;
+        } catch (error) {
+          this.isLoggedIn = false;
+          localStorage.removeItem('token');
+        }
+      } else {
         this.isLoggedIn = false;
       }
     },
-    async logout() {
-      try {
-        await logoutUser();
+    logout() {
+      if (confirm('Are you sure you want to logout?')) {
         this.isLoggedIn = false;
         this.user = { name: '', surname: '', role: '' };
-      } catch (error) {
-        console.error('Failed to logout:', error);
+        localStorage.removeItem('token'); // Remove the token
+        this.$router.push('/'); // Redirect to login page
       }
     }
   },

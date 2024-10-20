@@ -6,10 +6,20 @@
       <li><router-link to="/admin/products">Manage Products</router-link></li>
       <li><router-link to="/admin/categories">Manage Categories</router-link></li>
       <li><router-link to="/admin/orders">Manage Orders</router-link></li>
-      <li><router-link to="/">Logout</router-link></li>
+      <li><a href="#" @click="logout">Logout</a></li> <!-- Use click event for logout -->
     </ul>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    logout() {
+      this.$root.logout(); // Call the logout method from App.vue
+    }
+  }
+}
+</script>
 
 <style scoped>
 .sidebar {

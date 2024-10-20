@@ -1,18 +1,16 @@
-// import axios from 'axios';
+import axios from 'axios';
 
-// export const getUserDetails = async () => {
-//   try {
-//     const response = await axios.get('/ecommerce/customer/read{id}');
-//     return response.data;
-//   } catch (error) {
-//     throw new Error('Failed to fetch user details');
-//   }
-// };
+export async function getUserDetails(token) {
+    const response = await axios.get('/ecommerce/user/details', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    return response.data;
+}
 
-// export const logoutUser = async () => {
-//   try {
-//     await axios.post('/ecommoerce/logout');
-//   } catch (error) {
-//     throw new Error('Failed to logout');
-//   }
-// };
+export async function logoutUser() {
+    // Send a request to the server to invalidate the token
+    const response = await axios.post('/ecommerce/user/logout');
+    return response.data;
+}

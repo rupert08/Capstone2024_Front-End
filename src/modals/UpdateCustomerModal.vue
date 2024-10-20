@@ -5,7 +5,6 @@
 
       <h3>Update Customer</h3>
 
-      <!-- Only show the form if customer data is available -->
       <form v-if="customer">
         <div>
           <label for="firstName">First Name</label>
@@ -19,12 +18,12 @@
 
         <div>
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="updatedCustomer.contact.email" />
+          <input type="email" id="email" v-model="updatedCustomerContact.email" />
         </div>
 
         <div>
           <label for="phone">Phone</label>
-          <input type="tel" id="phone" v-model="updatedCustomer.contact.phoneNumber" />
+          <input type="tel" id="phone" v-model="updatedCustomerContact.phoneNumber" />
         </div>
 
         <button type="button" @click="submitUpdate">Update Customer</button>
@@ -42,43 +41,45 @@ export default {
   props: {
     isVisible: {
       type: Boolean,
-      required: true
+      required: true,
     },
     customer: {
       type: Object,
-      default: () => null, // Default to null to avoid type errors
-    }
+      default: () => null,
+    },
   },
   data() {
     return {
-      // Create a copy of the customer data to modify without affecting the original object
-      updatedCustomer: this.customer ? { ...this.customer } : {}
+      updatedCustomer: this.customer ? { ...this.customer } : {},
+      updatedCustomerContact: this.customer?.contact
+          ? { ...this.customer.contact }
+          : {},
     };
   },
   watch: {
-    // Update the form data when the customer prop changes
+
     customer(newCustomer) {
       if (newCustomer) {
         this.updatedCustomer = { ...newCustomer };
+        this.updatedCustomerContact = { ...newCustomer.contact };
       }
-    }
+    },
   },
   methods: {
     submitUpdate() {
-      // Emit the updated customer data back to the parent component
-      this.$emit('update-customer', this.customer.userId, this.updatedCustomer);
-      this.$emit('close'); // Close the modal after submission
+      this.updatedCustomer.contact = this.updatedCustomerContact;
+
+      this.$emit("update-customer", this.customer.userId, this.updatedCustomer);
+      this.$emit("close");
     },
     closeModal() {
-      // Emit the close event to close the modal
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Add some basic styles for the modal */
 .modal {
   display: block;
   position: fixed;

@@ -53,7 +53,10 @@ export default {
     return {
       name: '',
       surname: '',
-      email: '',
+      contact:{
+        email: '',
+        phoneNumber:''
+      },
       password: '',
       confirmPassword: '',
       passwordFieldType: 'password'

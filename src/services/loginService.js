@@ -1,16 +1,25 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = '/ecommerce/admin/';
+export async function loginUser(loginData, isAdmin) {
+  const url = isAdmin ? "http://localhost:5119/ecommerce/admin/login" : "http://localhost:5119/ecommerce/customer/login";
 
-
-export const loginAdmin = async (loginData) => {
   try {
-    const response = await axios.post(`${API_URL}login`, loginData, {
-      headers: { 'Content-Type': 'application/json' }
+    const response = await axios.post(url, loginData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: false // Ensure credentials are not included in the request
     });
-    return response;
+
+    console.log("Axios response:", response); // Log the Axios response
+
+    return response.data; // Return the response data directly
   } catch (error) {
-    console.error('Login failed:', error);
-    throw error;
+    console.log("Axios error:", error); // Log the error
+    if (error.response && error.response.status === 401) {
+      return { error: "Invalid email or password." };
+    } else {
+      return { error: "Login failed. Please check your connection." };
+    }
   }
-};
+}
