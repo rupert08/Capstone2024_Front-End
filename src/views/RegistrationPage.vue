@@ -6,20 +6,26 @@
     <form @submit.prevent="register">
       <div class="row">
         <div class="input-field col s12">
-          <input id="name" type="text" v-model="name" required>
+          <input id="name" type="text" v-model="firstName" required>
           <label for="name">Name</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="surname" type="text" v-model="surname" required>
+          <input id="surname" type="text" v-model="lastName" required>
           <label for="surname">Surname</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="email" type="email" v-model="email" required>
+          <input id="email" type="email" v-model="contact.email" required>
           <label for="email">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="phone" type="tel" v-model="contact.phoneNumber" required>
+          <label for="phone">Phone Number</label>
         </div>
       </div>
       <div class="row">
@@ -45,18 +51,17 @@
 </template>
 
 <script>
-import { registerCustomer } from '@/services/registrationService';
+import { createCustomer } from '@/services/customerService';
 
 export default {
   name: 'RegistrationPage',
   data() {
     return {
-      name: '',
-      surname: '',
+      firstName: '',
+      lastName: '',
       contact:{
-        email: '',
-        phoneNumber:''
-      },
+      email: '',
+      phoneNumber: ''},
       password: '',
       confirmPassword: '',
       passwordFieldType: 'password'
@@ -70,13 +75,14 @@ export default {
       }
       try {
         const customerData = {
-          name: this.name,
-          surname: this.surname,
+          firstName: this.firstName,
+          lastName: this.lastName,
           email: this.email,
+          phoneNumber: this.phoneNumber, // Include phone number in the data
           password: this.password
         };
-        await registerCustomer(customerData);
-        alert('Registration successful');
+        await createCustomer(customerData);
+        this.$emit('registered'); // Emit the registered event
       } catch (error) {
         alert('Failed to register customer');
       }

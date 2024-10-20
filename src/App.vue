@@ -14,7 +14,7 @@
       </div>
     </nav>
     <div class="content">
-      <router-view />
+      <router-view @registered="handleRegistrationSuccess" />
     </div>
     <PageFooter />
   </div>
@@ -74,6 +74,9 @@ export default {
         localStorage.removeItem('token'); // Remove the token
         this.$router.push('/'); // Redirect to login page
       }
+    },
+    handleRegistrationSuccess() {
+      this.$router.push({ name: 'HomePage' });
     }
   },
   computed: {
