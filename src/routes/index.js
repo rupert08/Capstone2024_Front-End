@@ -14,12 +14,12 @@ import OrderManagement  from "@/views/adminviews/OrderManagement.vue";
 
 const routes = [
   { path: '/', component: LoginPage },
-  { path: '/home', name: 'HomePage', component: HomePage },
+  { path: '/home', name: 'HomePage', component: HomePage, meta: { showCartIcon: true } },
   { path: '/home/login', component: LoginPage },
-  { path: '/about', name: 'About', component: AboutPage },
-  { path: '/category', name: 'Category', component: CategoryPage },
-  { path: '/cart', name: 'Cart', component: CartPage },
-  { path: '/order', name: 'Order', component: OrderPage },
+  { path: '/about', name: 'About', component: AboutPage, meta: { showCartIcon: true } },
+  { path: '/category', name: 'Category', component: CategoryPage, meta: { showCartIcon: true } },
+  { path: '/cart', name: 'Cart', component: CartPage, meta: { showCartIcon: true } },
+  { path: '/order', name: 'Order', component: OrderPage, meta: { showCartIcon: true } },
   { path: '/register', name: 'Register', component: Registration },
   { path: '/admin', name: 'AdminDashboard', component: AdminDashboard },
   { path: '/admin/customers', name: 'CustomerManagement', component: CustomerManagement },

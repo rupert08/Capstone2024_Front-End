@@ -3,9 +3,6 @@
     <header class="header">
       <h1 class="center-align">Welcome to Our Hardware Store</h1>
     </header>
-<!--    <div class="center-align" style="margin-bottom: 20px;">-->
-<!--      <router-link to="/about" class="btn">About Us</router-link>-->
-<!--    </div>-->
     <a-carousel :autoplay="true" class="image-slider" ref="carousel" :dots="false">
       <template #prev>
         <div class="custom-arrow custom-arrow-left" @click="prevSlide">‹</div>
@@ -19,7 +16,6 @@
     </a-carousel>
 
     <div class="row">
-      <!-- Sidebar for Categories -->
       <div class="col s12 m3 categories-sidebar">
         <div class="collection with-header">
           <div class="collection-header"><h5>Categories</h5></div>
@@ -31,15 +27,12 @@
         </div>
       </div>
 
-      <!-- Product Section -->
       <div class="col s12 m9">
         <div class="row">
           <div v-if="products.length === 0" class="col s12"><p>No products available</p></div>
           <div class="col s12 m6 l4" v-for="product in products" :key="product.id">
             <div class="card">
               <div class="card-image">
-
-
                 <img :src="product.imageName ? getProductImage(product.productId) : '/image/'" alt="Product Image">
                 <span class="card-title">{{ product.name }}</span>
               </div>
@@ -48,35 +41,41 @@
                 <p><strong>Price:</strong> ${{ product.price }}</p>
               </div>
               <div class="card-action">
-                <a href="/cart">Add to Cart</a>
-                <a :href="'/product/' + product.id">View Details</a>
+                <a href="javascript:void(0)" class="btn" @click="addToCart(product)">Add to Cart</a>
+                <a href="javascript:void(0)" class="btn" @click="openModal(product)">View Details</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <ProductModal v-if="showModal" :product="selectedProduct" :showModal="showModal" @close-modal="closeModal" />
   </div>
 </template>
 
 <script>
 import { getProducts } from '@/services/productService.js';
 import { getCategories } from '@/services/categoryService';
+import ProductModal from '@/modals/ProductModal.vue';
 
 export default {
   name: 'HomePage',
+  components: {
+    ProductModal
+  },
   data() {
     return {
       products: [],
       categories: [],
-      isAddModalVisible: false,
-      sortKey: '',
-      sortAsc: true
+      sliderProducts: [],
+      showModal: false,
+      selectedProduct: null
     };
   },
   async created() {
     await this.fetchProducts();
-    await this.fetchCategories();  // Fetch categories on component load
+    await this.fetchCategories();
   },
   methods: {
     async fetchProducts() {
@@ -89,26 +88,29 @@ export default {
     async fetchCategories() {
       try {
         this.categories = await getCategories();
-        console.log(this.categories); // Log to verify that categories are fetched
-        this.filteredCategories = this.categories;
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     },
-    // Construct the image URL for the product
     getProductImage(productId) {
       return `http://localhost:5119/ecommerce/products/${productId}/image`;
     },
-    sortBy(key) {
-      this.sortKey = key;
-      this.sortAsc = !this.sortAsc;
-      this.products.sort((a, b) => {
-        let modifier = 1;
-        if (!this.sortAsc) modifier = -1;
-        if (a[key] < b[key]) return -1 * modifier;
-        if (a[key] > b[key]) return 1 * modifier;
-        return 0;
-      });
+    addToCart(product) {
+      console.log('Adding product to cart:', product);
+    },
+    openModal(product) {
+      this.selectedProduct = product;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.selectedProduct = null;
+    },
+    prevSlide() {
+      this.$refs.carousel.prev();
+    },
+    nextSlide() {
+      this.$refs.carousel.next();
     }
   }
 };
