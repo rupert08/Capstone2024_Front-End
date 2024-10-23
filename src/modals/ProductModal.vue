@@ -7,6 +7,12 @@
       <img :src="getProductImage(product.productId)" alt="Product Image" class="product-image">
       <p>{{ product.description }}</p>
       <p><strong>Price:</strong> ${{ product.price }}</p>
+      <!-- Quantity adjustment -->
+      <div class="quantity-adjustment">
+        <button @click="decreaseQuantity">-</button>
+        <span>{{ quantity }}</span>
+        <button @click="increaseQuantity">+</button>
+      </div>
       <!-- Add to Cart button or other modal actions -->
       <div class="button-group">
         <button class="btn" @click="addToCart(product)">Add to Cart</button>
@@ -23,16 +29,29 @@ export default {
     product: Object,
     showModal: Boolean
   },
+  data() {
+    return {
+      quantity: 1
+    };
+  },
   methods: {
     closeModal() {
       this.$emit('close-modal');
     },
     addToCart(product) {
-      // Add product to cart logic here
-      console.log('Adding product to cart:', product);
+      // Add product to cart logic here with quantity
+      console.log('Adding product to cart:', product, 'Quantity:', this.quantity);
     },
     getProductImage(productId) {
       return `http://localhost:5119/ecommerce/products/${productId}/image`;
+    },
+    increaseQuantity() {
+      this.quantity++;
+    },
+    decreaseQuantity() {
+      if (this.quantity > 1) {
+        this.quantity--;
+      }
     }
   }
 };
@@ -57,9 +76,9 @@ export default {
   padding: 20px;
   border: 1px solid #888;
   width: 600px;
-  max-width: 600px;
-  height: 400px;
-  max-height: 400px;
+  max-width: 460px;
+  height: 600px;
+  max-height: 600px;
   overflow: hidden;
   box-sizing: border-box;
   border-radius: 10px;
@@ -100,6 +119,27 @@ h4 {
 p {
   color: #666;
   text-align: center;
+}
+
+.quantity-adjustment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.quantity-adjustment button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.quantity-adjustment span {
+  margin: 0 10px;
+  font-size: 16px;
 }
 
 .button-group {
